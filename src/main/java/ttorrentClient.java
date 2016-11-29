@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 
-
 public class ttorrentClient {
     public void connect() {
         try {
