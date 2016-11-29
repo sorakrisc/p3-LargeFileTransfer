@@ -9,7 +9,7 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
 }
-mainClassName = "runClient"
+mainClassName = "runDiscovery"
 
 jar {
     exclude("**/Test")
