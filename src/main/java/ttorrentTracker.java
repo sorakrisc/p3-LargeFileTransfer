@@ -1,8 +1,11 @@
+import com.turn.ttorrent.common.Torrent;
 import com.turn.ttorrent.tracker.TrackedTorrent;
 import com.turn.ttorrent.tracker.Tracker;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.NoSuchAlgorithmException;
 
@@ -34,6 +37,30 @@ public class ttorrentTracker {
         }catch (IOException ex) {
 //            Logger.getLogger(DiscoveryThread.class.getName()).log(Level.SEVERE, null, ex);
         }catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+    //512*1024
+    //destination of the file, number, url(interface), string(name)
+    public static void createTorrentFile(){
+        // File parent = new File("d:/echo-insurance.backup");
+        String sharedFile = "d:/echo-insurance.backup";
+
+        try {
+            Tracker tracker = new Tracker( InetAddress.getLocalHost() );
+            tracker.start();
+            System.out.println("Tracker running.");
+
+            System.out.println( "create new .torrent metainfo file..." );
+            Torrent torrent = Torrent.create(new File(sharedFile), tracker.getAnnounceUrl().toURI(), "createdByDarren");
+
+            System.out.println("save .torrent to file...");
+
+            FileOutputStream fos = new FileOutputStream("d:/seed.torrent");
+            torrent.save( fos );
+            fos.close();
+
+        } catch ( Exception e ) {
             e.printStackTrace();
         }
     }
