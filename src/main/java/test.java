@@ -6,42 +6,14 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.*;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 
-public class ttorrentTracker {
-    public void track(){
-        try{
-            // First, instantiate a Tracker object with the port you want it to listen on.
-            // The default tracker port recommended by the BitTorrent protocol is 6969.
-            Tracker tracker = new Tracker(new InetSocketAddress(6969));
-
-            // Then, for each torrent you wish to announce on this tracker, simply created
-            // a TrackedTorrent object and pass it to the tracker.announce() method:
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".torrent");
-                }
-            };
-            for (File f : new File("/home/james/Downloads/seed.torrent").listFiles(filter)) {
-                tracker.announce(TrackedTorrent.load(f));
-            }
-
-            // Once done, you just have to start the tracker's main operation loop:
-            tracker.start();
-
-            // You can stop the tracker when you're done with:
-            tracker.stop();
-        }catch (IOException ex) {
-//            Logger.getLogger(DiscoveryThread.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
+//512*1024
+//destination of the file, number, http://<ip>:<port>/annouce, string(name)
+public class test {
     public static List<List<URI>> buildURI(String port){
         List<URI> lst1 = new ArrayList<>();
         List<List<URI>> lst2 = new ArrayList<>();
@@ -66,11 +38,11 @@ public class ttorrentTracker {
                 }
             }
         }catch (IOException ex) {
-        }
+            }
         lst2.add(lst1);
         return lst2;
     }
-    public static void createTorrentFile() {
+    public static void main(String[] args) {
         // File parent = new File("d:/echo-insurance.backup");
         String sharedFile = "/home/james/Downloads/testjpg.jpg";
         List<List<URI>> URI =buildURI("6969");
@@ -93,5 +65,4 @@ public class ttorrentTracker {
             e.printStackTrace();
         }
     }
-
 }

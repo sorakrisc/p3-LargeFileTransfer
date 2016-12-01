@@ -1,8 +1,7 @@
 import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class UDPTalker implements Runnable {
 
