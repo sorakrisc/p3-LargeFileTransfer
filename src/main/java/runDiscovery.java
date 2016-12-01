@@ -1,7 +1,7 @@
 public class runDiscovery {
     public static void main(String[] args) {
-        Thread talker = new Thread(UDPTalker.getTalkInstance());;
-        Thread discoveryThread = new Thread(DiscoveryThread.getInstance());
+        Thread talker = new Thread(new UDPTalker());
+        Thread discoveryThread = new Thread(new DiscoveryThread());
         talker.start();
         discoveryThread.start();
     }

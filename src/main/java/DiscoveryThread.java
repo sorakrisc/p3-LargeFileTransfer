@@ -23,6 +23,7 @@ public class DiscoveryThread implements Runnable {
                 byte[] recvBuf = new byte[15000];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
                 socket.receive(packet);
+                
 
                 //Packet received
                 System.out.println(getClass().getName() + ": Discovery packet received from: " + packet.getAddress().getHostAddress());
@@ -42,17 +43,9 @@ public class DiscoveryThread implements Runnable {
 
                     System.out.println(getClass().getName() + ": Sent packet to: " + sendPacket.getAddress().getHostAddress());
                 }
-                //call ttorrent
             }
         } catch (IOException ex) {
             Logger.getLogger(DiscoveryThread.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    public ConcurrentSkipListSet<String> getIPLanList() {return lanIP;}
-    public static DiscoveryThread getInstance() {
-        return DiscoveryThreadHolder.INSTANCE;
-    }
-    private static class DiscoveryThreadHolder {
-        private static final DiscoveryThread INSTANCE = new DiscoveryThread();
     }
 }

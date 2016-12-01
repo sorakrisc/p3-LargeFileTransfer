@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
+import java.util.Observable;
+import java.util.Observer;
 
 public class ttorrentClient {
     public void connect() {
@@ -19,8 +21,8 @@ public class ttorrentClient {
                         // Load the torrent from the torrent file and use the given
                         // output directory. Partials downloads are automatically recovered.
                         SharedTorrent.fromFile(
-                                new File("/path/to/your.torrent"),
-                                new File("/path/to/output/directory")));
+                                new File("/home/james/Downloads/punch.torrent"),
+                                new File("/home/james/Downloads/")));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
@@ -34,7 +36,15 @@ public class ttorrentClient {
             // At this point, can you either call download() to download the torrent and
             // stop immediately after...
             // client.download();
-
+            client.addObserver(new Observer() {
+                @Override
+                public void update(Observable observable, Object data) {
+                    Client client = (Client) observable;
+                    float progress = client.getTorrent().getCompletion();
+                    // Do something with progress.
+                    System.out.println(progress);
+                }
+            });
             // Or call client.share(...) with a seed time in seconds:
             client.share(3600);
             // Which would seed the torrent for an hour after the download is complete.

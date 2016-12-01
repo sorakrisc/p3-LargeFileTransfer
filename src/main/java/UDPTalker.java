@@ -80,11 +80,4 @@ public class UDPTalker implements Runnable {
             // Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public static UDPTalker getTalkInstance() {
-        return UDPTalkerThreadHolder.INSTANCE;
-    }
-    private static class UDPTalkerThreadHolder {
-        private static final UDPTalker INSTANCE = new UDPTalker();
-    }
-
 }
