@@ -49,7 +49,7 @@ public class ttorrentClient {
                         // Load the torrent from the torrent file and use the given
                         // output directory. Partials downloads are automatically recovered.
                         SharedTorrent.fromFile(
-                                new File(System.getProperty("user.dir")+"seed.torrent"),
+                                new File(System.getProperty("user.dir")+"/seed.torrent"),
                                 new File(System.getProperty("user.dir"))));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();

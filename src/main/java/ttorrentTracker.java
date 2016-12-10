@@ -18,13 +18,14 @@ public class ttorrentTracker {
             // First, instantiate a Tracker object with the port you want it to listen on.
             // The default tracker port recommended by the BitTorrent protocol is 6969.
             Tracker tracker = new Tracker(new InetSocketAddress(6969));
+            tracker.start();
             createTorrentFile();
             // Then, for each torrent you wish to announce on this tracker, simply created
             // a TrackedTorrent object and pass it to the tracker.announce() method:
-
+            System.out.println(System.getProperty("user.dir"));
             tracker.announce(TrackedTorrent.load(new File(System.getProperty("user.dir")+"/seed.torrent")));
             // Once done, you just have to start the tracker's main operation loop:
-            tracker.start();
+//            tracker.start();
 
             // You can stop the tracker when you're done with:
             //tracker.stop();
@@ -68,6 +69,7 @@ public class ttorrentTracker {
         // File parent = new File("d:/echo-insurance.backup");
         String sharedFile = System.getProperty("user.dir")+"/testjpg.jpg";
         List<List<URI>> URI =buildURI("6969");
+
         try {
             System.out.println( "create new .torrent metainfo file..." );
             Torrent torrent = Torrent.create(new File(sharedFile), 512*1024, URI, "createdByJamesTle");
