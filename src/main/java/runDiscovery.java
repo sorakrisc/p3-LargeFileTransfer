@@ -10,8 +10,8 @@ public class runDiscovery {
             //someone is trying to create a server and we have to tell everyone that there is a
             //file here on that particular machine
         System.out.println(System.getProperty("user.dir"));
-//        ttorrentTracker t = new ttorrentTracker();
-//        t.track();
+        ttorrentTracker t = new ttorrentTracker();
+        t.track();
         ttorrentClient c = new ttorrentClient();
         c.connect();
 

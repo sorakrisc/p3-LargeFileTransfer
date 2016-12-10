@@ -15,11 +15,14 @@ import java.util.List;
 public class ttorrentTracker {
     public void track(){
         try{
+            List<List<URI>> URI = buildURI();
+            createTorrentFile(URI);
             // First, instantiate a Tracker object with the port you want it to listen on.
             // The default tracker port recommended by the BitTorrent protocol is 6969.
-            Tracker tracker = new Tracker(new InetSocketAddress(6969));
+
+            Tracker tracker = new Tracker(new InetSocketAddress(getcorrectInetAddr().get(0),6969));
             tracker.start();
-            createTorrentFile();
+
             // Then, for each torrent you wish to announce on this tracker, simply created
             // a TrackedTorrent object and pass it to the tracker.announce() method:
             System.out.println(System.getProperty("user.dir"));
@@ -35,7 +38,34 @@ public class ttorrentTracker {
             e.printStackTrace();
         }
     }
-    public static List<List<URI>> buildURI(String port){
+    public static List<InetAddress> getcorrectInetAddr(){
+        List<InetAddress> lst1 = new ArrayList<>();
+        try{
+            Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+                if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                    continue; // Don't want to broadcast to the loopback interface
+                }
+
+                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+                    InetAddress broadcast = interfaceAddress.getBroadcast();
+                    if (broadcast == null) {
+                        continue;
+                    }
+
+                    if (interfaceAddress.getAddress().toString().substring(1,4).equals("10.")) {
+                        lst1.add(interfaceAddress.getAddress());
+                    }
+
+                }
+            }
+        }catch (IOException ex) {
+            System.out.println("error at getcorrectInetAddr");
+        }
+        return lst1;
+    }
+    public static List<List<URI>> buildURI(){
         List<URI> lst1 = new ArrayList<>();
         List<List<URI>> lst2 = new ArrayList<>();
         try{
@@ -53,7 +83,7 @@ public class ttorrentTracker {
                     }
                     try{
                         if (interfaceAddress.getAddress().toString().substring(1,4).equals("10.")) {
-                            lst1.add(new URL("http:/" + interfaceAddress.getAddress().toString() + ":" + port + "/annouce").toURI());
+                            lst1.add(new URL("http:/" + interfaceAddress.getAddress().toString() + ":" + "6969" + "/annouce").toURI());
                         }
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
@@ -65,10 +95,10 @@ public class ttorrentTracker {
         lst2.add(lst1);
         return lst2;
     }
-    public static void createTorrentFile() {
+    public static void createTorrentFile(List<List<URI>> URI) {
         // File parent = new File("d:/echo-insurance.backup");
         String sharedFile = System.getProperty("user.dir")+"/testjpg.jpg";
-        List<List<URI>> URI =buildURI("6969");
+//        List<List<URI>> URI =buildURI("6969");
 
         try {
             System.out.println( "create new .torrent metainfo file..." );
