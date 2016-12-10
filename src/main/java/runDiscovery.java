@@ -12,6 +12,7 @@ public class runDiscovery {
         System.out.println(System.getProperty("user.dir"));
         ttorrentTracker t = new ttorrentTracker();
         t.track();
+
         ttorrentClient c = new ttorrentClient();
         c.connect();
 

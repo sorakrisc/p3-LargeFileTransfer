@@ -16,10 +16,10 @@ public class ttorrentTracker {
     public void track(){
         try{
             List<List<URI>> URI = buildURI();
+            System.out.println(getcorrectInetAddr().get(0));
             createTorrentFile(URI);
             // First, instantiate a Tracker object with the port you want it to listen on.
             // The default tracker port recommended by the BitTorrent protocol is 6969.
-
             Tracker tracker = new Tracker(new InetSocketAddress(getcorrectInetAddr().get(0),6969));
             tracker.start();
 
@@ -53,8 +53,7 @@ public class ttorrentTracker {
                     if (broadcast == null) {
                         continue;
                     }
-
-                    if (interfaceAddress.getAddress().toString().substring(1,4).equals("10.")) {
+                    if (interfaceAddress.getAddress().toString().substring(1,4).equals("192")) {
                         lst1.add(interfaceAddress.getAddress());
                     }
 
@@ -82,8 +81,8 @@ public class ttorrentTracker {
                         continue;
                     }
                     try{
-                        if (interfaceAddress.getAddress().toString().substring(1,4).equals("10.")) {
-                            lst1.add(new URL("http:/" + interfaceAddress.getAddress().toString() + ":" + "6969" + "/annouce").toURI());
+                        if (interfaceAddress.getAddress().toString().substring(1,4).equals("192")) {
+                            lst1.add(new URL("http:/" + interfaceAddress.getAddress().toString() + ":" + "6969" + "/announce").toURI());
                         }
                     } catch (URISyntaxException e) {
                         e.printStackTrace();

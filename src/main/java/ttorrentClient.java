@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ttorrentClient {
+    public static Client client;
     public static List<InetAddress> getLocalHost(){
         List<InetAddress> lst1 = new ArrayList<>();
         try{
@@ -23,7 +26,7 @@ public class ttorrentClient {
                         continue;
                     }
                     System.out.println(interfaceAddress.getAddress());
-                    if (interfaceAddress.getAddress().toString().substring(1,4).equals("10.")) {
+                    if (interfaceAddress.getAddress().toString().substring(1,4).equals("192")) {
                         lst1.add(interfaceAddress.getAddress());
                     }
 
@@ -36,12 +39,12 @@ public class ttorrentClient {
     public void connect() {
         try {
             // First, instantiate the Client object.
-            Client client = null;
+//            Client client = null;
             InetAddress addr = getLocalHost().get(0);
             System.out.println(addr);
             System.out.println(InetAddress.getLocalHost());
             try {
-                client = new Client(
+                this.client = new Client(
                         // This is the interface the client will listen on (you might need something
                         // else than localhost here).
                         // InetAddress.getLocalHost(),
@@ -58,13 +61,13 @@ public class ttorrentClient {
             // You can optionally set download/upload rate limits
             // in kB/second. Setting a limit to 0.0 disables rate
             // limits.
-            client.setMaxDownloadRate(0.0);
-            client.setMaxUploadRate(0.0);
+            this.client.setMaxDownloadRate(0.0);
+            this.client.setMaxUploadRate(0.0);
 
             // At this point, can you either call download() to download the torrent and
             // stop immediately after...
             // client.download();
-            client.addObserver(new Observer() {
+            this.client.addObserver(new Observer() {
                 @Override
                 public void update(Observable observable, Object data) {
                     Client client = (Client) observable;
@@ -73,18 +76,36 @@ public class ttorrentClient {
                     System.out.println(progress);
                 }
             });
+
+            ExecutorService pool = Executors.newFixedThreadPool(1);
+            pool.submit(new Thd());
             // Or call client.share(...) with a seed time in seconds:
-            client.share(3600);
+            this.client.share();
             // Which would seed the torrent for an hour after the download is complete.
 
             // Downloading and seeding is done in background threads.
             // To wait for this process to finish, call:
-            client.waitForCompletion();
+            this.client.waitForCompletion();
 
             // At any time you can call client.stop() to interrupt the download.
         } catch (IOException ex) {
             System.out.println("There is an error..");
             //Logger.getLogger(DiscoveryThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    static class Thd implements Runnable{
+        @Override
+        public void run() {
+            while (true){
+                System.out.println("State: " + ttorrentClient.client.getState() + " Progress: " + ttorrentClient.client.getTorrent().getCompletion());
+                System.out.println(ttorrentClient.client.getPeers());
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
