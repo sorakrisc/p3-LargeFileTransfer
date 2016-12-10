@@ -27,11 +27,14 @@ public class DiscoveryThread implements Runnable {
 
                 //Packet received
                 System.out.println(getClass().getName() + ": Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ": Packet received; data: " + new String(packet.getData()));
+                System.out.println(getClass().getName() + ": Packet received; data: " + new String(packet.getData()).trim());
 
-                //Add ip to concurrentskiplistset
-                lanIP.add(packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ": List of IP in your LAN: " + lanIP);
+                //Add ip to concurrentskiplistset 10.x.x.x
+                String ip = packet.getAddress().getHostAddress();
+                if (ip.substring(0,3).equals("10.")) {
+                    lanIP.add(packet.getAddress().getHostAddress());
+                    System.out.println(getClass().getName() + ": List of IP in your LAN: " + lanIP);
+                }
                 //See if the packet holds the right command (message)
                 String message = new String(packet.getData()).trim();
                 if (message.equals("DISCOVER_FUIFSERVER_REQUEST")) {
