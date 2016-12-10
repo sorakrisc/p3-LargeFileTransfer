@@ -22,8 +22,7 @@ public class ttorrentTracker {
             // Then, for each torrent you wish to announce on this tracker, simply created
             // a TrackedTorrent object and pass it to the tracker.announce() method:
 
-
-            tracker.announce(TrackedTorrent.load(new File("/home/james/Downloads/seed.torrent")));
+            tracker.announce(TrackedTorrent.load(new File(System.getProperty("user.dir")+"/seed.torrent")));
             // Once done, you just have to start the tracker's main operation loop:
             tracker.start();
 
@@ -52,7 +51,9 @@ public class ttorrentTracker {
                         continue;
                     }
                     try{
-                        lst1.add(new URL("http:/"+interfaceAddress.getAddress().toString()+":"+port+"/annouce").toURI());
+                        if (interfaceAddress.getAddress().toString().substring(1,4).equals("10.")) {
+                            lst1.add(new URL("http:/" + interfaceAddress.getAddress().toString() + ":" + port + "/annouce").toURI());
+                        }
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
@@ -65,7 +66,7 @@ public class ttorrentTracker {
     }
     public static void createTorrentFile() {
         // File parent = new File("d:/echo-insurance.backup");
-        String sharedFile = "/home/james/Downloads/testjpg.jpg";
+        String sharedFile = System.getProperty("user.dir")+"/testjpg.jpg";
         List<List<URI>> URI =buildURI("6969");
         try {
             System.out.println( "create new .torrent metainfo file..." );
@@ -74,7 +75,7 @@ public class ttorrentTracker {
             System.out.println("HII");
             System.out.println("save .torrent to file...");
 
-            FileOutputStream fos = new FileOutputStream("/home/james/Downloads/seed.torrent");
+            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir")+"/seed.torrent");
             torrent.save(fos);
             fos.close();
             System.out.println(".torrent file is saved");

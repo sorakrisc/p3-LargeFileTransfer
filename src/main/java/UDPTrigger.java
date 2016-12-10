@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Enumeration;
 
 
-public class UDPTalker implements Runnable {
+public class UDPTrigger implements Runnable {
 
     DatagramSocket c = null;
 
