@@ -9,6 +9,8 @@
 *.ear
 
 # Intellij
+.gradle/
+build/
 .idea/
 *.iml
 *.iws
