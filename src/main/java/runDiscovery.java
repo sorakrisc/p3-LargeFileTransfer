@@ -16,23 +16,27 @@ public class runDiscovery {
         // file here on that particular machine
         // broadcast to everyone the file name and the ip
         else {
-//            ExecutorService threadPool = Executors.newFixedThreadPool(3);
+            ExecutorService threadPool = Executors.newFixedThreadPool(3);
 
             String shareFileName = args[0];
             // ask ip
             InetAddress intfaceaddr = findInterface.askCorrectInetAddr();
 
             // create tracker and torrent file
-            ttorrentTracker t = new ttorrentTracker(intfaceaddr, shareFileName);
-            t.track();
-            // threadPool.submit(new ttorrentTracker(intfaceaddr, shareFileName));
+//            ttorrentTracker t = new ttorrentTracker(intfaceaddr, shareFileName);
+//            t.track();
+            threadPool.submit(new ttorrentTracker(intfaceaddr, shareFileName));
 
+            // be a seeder
+//            ttorrentClient c = new ttorrentClient(intfaceaddr);
+//            c.connect();
+            threadPool.submit(new ttorrentClient(intfaceaddr));
 
             // tell other that u have the dang file and open the server
             // open the server that host the torrent file
             String portserv = "4542";
             String filetosend = System.getProperty("user.dir")+"/seed.torrent"; //torrent file that
-//            threadPool.submit(new SimpleFileServer(portserv,filetosend));
+            threadPool.submit(new SimpleFileServer(portserv,filetosend));
 //            Thread serv = new Thread(new SimpleFileServer(portserv,filetosend));
 //            serv.run();
 
@@ -41,10 +45,6 @@ public class runDiscovery {
             trigger.start();
             System.out.println("STARTING TRIGGER");
 
-            // be a seeder
-            ttorrentClient c = new ttorrentClient(intfaceaddr);
-            c.connect();
-            // threadPool.submit(new ttorrentClient(intfaceaddr));
 
         }
     }
