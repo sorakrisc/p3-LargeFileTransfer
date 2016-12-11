@@ -11,7 +11,7 @@ public class UDPTrigger implements Runnable {
         try{
             c = new DatagramSocket();
             c.setBroadcast(true);
-            byte[] sendData = "DISCOVER_SERVER_REQUEST".getBytes();
+            byte[] sendData = "DISCOVER_SERVER_TRIGGER".getBytes();
             while (true){
                 try{
                     byte[] buf = new byte[256];
@@ -62,9 +62,9 @@ public class UDPTrigger implements Runnable {
 
                 //Check if the message is correct
                 String message = new String(receivePacket.getData()).trim();
-                if (message.equals("DISCOVER_SERVER_RESPONSE")) {
+                if (message.equals("DISCOVER_SERVER_RESPONSE_TRIGGER")) {
                     //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                    System.out.println("Server's IP: "+receivePacket.getAddress());
+                    System.out.println("RESPONSE FROM IP: "+receivePacket.getAddress());
                 }
 
                 //Close the port!

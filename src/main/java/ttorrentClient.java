@@ -9,50 +9,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ttorrentClient {
-    public static Client client;
-    public static List<InetAddress> getLocalHost(){
-        List<InetAddress> lst1 = new ArrayList<>();
-        try{
-            Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
-                if (networkInterface.isLoopback() || !networkInterface.isUp()) {
-                    continue; // Don't want to broadcast to the loopback interface
-                }
+    InetAddress InetAddr;
+    String dirTorFileName;
 
-                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-                    InetAddress broadcast = interfaceAddress.getBroadcast();
-                    if (broadcast == null) {
-                        continue;
-                    }
-                    System.out.println(interfaceAddress.getAddress());
-                    if (interfaceAddress.getAddress().toString().substring(1,4).equals("192")) {
-                        lst1.add(interfaceAddress.getAddress());
-                    }
-
-                }
-            }
-        }catch (IOException ex) {
-        }
-        return lst1;
+    public ttorrentClient(InetAddress ip){
+        InetAddr = ip;
+        dirTorFileName = System.getProperty("user.dir")+"/seed.torrent";
     }
+
+    public static Client client;
     public void connect() {
         try {
             // First, instantiate the Client object.
 //            Client client = null;
-            InetAddress addr = getLocalHost().get(0);
-            System.out.println(addr);
-            System.out.println(InetAddress.getLocalHost());
             try {
                 this.client = new Client(
                         // This is the interface the client will listen on (you might need something
                         // else than localhost here).
-                        // InetAddress.getLocalHost(),
-                        addr,
+                        InetAddr,
                         // Load the torrent from the torrent file and use the given
                         // output directory. Partials downloads are automatically recovered.
                         SharedTorrent.fromFile(
-                                new File(System.getProperty("user.dir")+"/seed.torrent"),
+                                new File(dirTorFileName),
                                 new File(System.getProperty("user.dir"))));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();

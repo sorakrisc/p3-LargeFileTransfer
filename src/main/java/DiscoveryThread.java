@@ -9,9 +9,13 @@ import java.util.logging.Logger;
 public class DiscoveryThread implements Runnable {
     DatagramSocket socket;
     ConcurrentSkipListSet<String> lanIP = new ConcurrentSkipListSet<>();
-
+    InetAddress intFaceAddr;
+    public DiscoveryThread(InetAddress ip){
+        intFaceAddr = ip;
+    }
     @Override
     public void run() {
+        boolean switches = true;
         try {
             //Keep a socket open to listen to all the UDP trafic that is destined for this port
             socket = new DatagramSocket(6789, InetAddress.getByName("0.0.0.0"));
@@ -31,7 +35,9 @@ public class DiscoveryThread implements Runnable {
 
                 //Add ip to concurrentskiplistset 10.x.x.x
                 String ip = packet.getAddress().getHostAddress();
-                if (ip.substring(0,3).equals("10.")) {
+                System.out.println(intFaceAddr.toString().substring(1,4));
+                System.out.println(ip.substring(0,3));
+                if (ip.substring(0,3).equals(intFaceAddr.toString().substring(1,4))) {
                     lanIP.add(packet.getAddress().getHostAddress());
                     System.out.println(getClass().getName() + ": List of IP in your LAN: " + lanIP);
                 }
@@ -45,6 +51,20 @@ public class DiscoveryThread implements Runnable {
                     socket.send(sendPacket);
 
                     System.out.println(getClass().getName() + ": Sent packet to: " + sendPacket.getAddress().getHostAddress());
+                }
+                else if (message.equals("DISCOVER_SERVER_TRIGGER") && switches){
+                    switches =false;
+                    byte[] sendData = "DISCOVER_SERVER_RESPONSE_TRIGGER".getBytes();
+                    //Send a response
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(),packet.getPort());
+                    socket.send(sendPacket);
+                    // ask and download torrent file first
+
+
+                    //then load it!
+                    ttorrentClient c = new ttorrentClient(intFaceAddr);
+                    c.connect();
+
                 }
             }
         } catch (IOException ex) {
