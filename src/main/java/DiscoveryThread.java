@@ -59,7 +59,7 @@ public class DiscoveryThread implements Runnable {
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(),packet.getPort());
                     socket.send(sendPacket);
                     // ask and download torrent file first
-
+                    
 
                     //then load it!
                     ttorrentClient c = new ttorrentClient(intFaceAddr);
