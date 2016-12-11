@@ -12,9 +12,15 @@ import java.util.Enumeration;
 import java.util.List;
 
 
-public class ttorrentTracker {
+public class ttorrentTracker implements Runnable{
     InetAddress InetAddr;
     String dirTorFileName;
+
+    @Override
+    public void run() {
+        track();
+    }
+
     String dirShareFileName;
     public ttorrentTracker(InetAddress ip, String fn){
         InetAddr = ip;

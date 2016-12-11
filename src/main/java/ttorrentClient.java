@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ttorrentClient {
+public class ttorrentClient implements Runnable{
     InetAddress InetAddr;
     String dirTorFileName;
 
@@ -70,6 +70,11 @@ public class ttorrentClient {
             System.out.println("There is an error..");
             //Logger.getLogger(DiscoveryThread.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void run() {
+        connect();
     }
 
     static class Thd implements Runnable{
