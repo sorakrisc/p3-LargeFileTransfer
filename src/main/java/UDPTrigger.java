@@ -71,7 +71,7 @@ public class UDPTrigger implements Runnable {
 //                c.close();
                 try {
                     //stop talking for 1.5 sec
-                    Thread.sleep(1500);
+                    Thread.sleep(2500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

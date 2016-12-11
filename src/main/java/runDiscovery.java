@@ -1,4 +1,6 @@
 import java.net.InetAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class runDiscovery {
     public static void main(String[] args) {
@@ -14,6 +16,8 @@ public class runDiscovery {
         // file here on that particular machine
         // broadcast to everyone the file name and the ip
         else {
+//            ExecutorService threadPool = Executors.newFixedThreadPool(3);
+
             String shareFileName = args[0];
             // ask ip
             InetAddress intfaceaddr = findInterface.askCorrectInetAddr();
@@ -21,13 +25,28 @@ public class runDiscovery {
             // create tracker and torrent file
             ttorrentTracker t = new ttorrentTracker(intfaceaddr, shareFileName);
             t.track();
+            // threadPool.submit(new ttorrentTracker(intfaceaddr, shareFileName));
+
+
+            // tell other that u have the dang file and open the server
+            // open the server that host the torrent file
+            String portserv = "4542";
+            String filetosend = System.getProperty("user.dir")+"/seed.torrent"; //torrent file that
+//            threadPool.submit(new SimpleFileServer(portserv,filetosend));
+//            Thread serv = new Thread(new SimpleFileServer(portserv,filetosend));
+//            serv.run();
+
+            // UDPtrigger and tell them to come get the file
+            Thread trigger = new Thread(new UDPTrigger());
+            trigger.start();
+            System.out.println("STARTING TRIGGER");
 
             // be a seeder
             ttorrentClient c = new ttorrentClient(intfaceaddr);
             c.connect();
-
-            // tell other that u have the dang file
+            // threadPool.submit(new ttorrentClient(intfaceaddr));
 
         }
     }
 }
+// TODO: Delete the torrent file when it is done
