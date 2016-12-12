@@ -18,7 +18,7 @@ public class UDPTalker implements Runnable {
                     InetAddress ip = InetAddress.getByName("255.255.255.255");
                     DatagramPacket packet = new DatagramPacket(sendData,sendData.length,ip,6789);
                     c.send(packet);
-                    System.out.println(getClass().getName() + ": Request packet sent to: 255.255.255.255 (DEFAULT)");
+//                    System.out.println(getClass().getName() + ": Request packet sent to: 255.255.255.255 (DEFAULT)");
 
                 }catch(IOException e){
                     e.printStackTrace();
@@ -46,11 +46,11 @@ public class UDPTalker implements Runnable {
                         } catch (Exception e) {
                         }
 
-                        System.out.println(getClass().getName() + ": Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
+//                        System.out.println(getClass().getName() + ": Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
                     }
                 }
 
-                System.out.println(getClass().getName() + ": Done looping over all network interfaces. Now waiting for a reply!");
+//                System.out.println(getClass().getName() + ": Done looping over all network interfaces. Now waiting for a reply!");
 
                 //Wait for a response
                 byte[] recvBuf = new byte[15000];
@@ -58,13 +58,13 @@ public class UDPTalker implements Runnable {
                 c.receive(receivePacket);
 
                 //We have a response
-                System.out.println(getClass().getName() + ": Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                // System.out.println(getClass().getName() + ": Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
 
                 //Check if the message is correct
                 String message = new String(receivePacket.getData()).trim();
                 if (message.equals("DISCOVER_SERVER_RESPONSE")) {
                     //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                    System.out.println("Server's IP: "+receivePacket.getAddress());
+                    //System.out.println("Server's IP: "+receivePacket.getAddress());
                 }
 
                 //Close the port!

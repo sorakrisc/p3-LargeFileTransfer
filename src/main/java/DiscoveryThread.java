@@ -41,7 +41,7 @@ public class DiscoveryThread implements Runnable {
                 }
                 //See if the packet holds the right command (message)
                 String message = new String(packet.getData()).trim();
-                System.out.println(message);
+                //System.out.println(message);
                 if (message.equals("DISCOVER_SERVER_REQUEST")) {
                     byte[] sendData = "DISCOVER_SERVER_RESPONSE".getBytes();
 
@@ -60,17 +60,14 @@ public class DiscoveryThread implements Runnable {
                     socket.send(sendPacket);
 
                     // ask and download torrent file first
-                    // * //
                     String IPforClietToServ = packet.getAddress().getHostAddress();
-                    // * //
-
                     String portClient = "4542";
-                    String store = System.getProperty("user.dir")+"/seed.torrent"; // "/Users/Tle/Downloads/eiei.torrent";
+                    String store = System.getProperty("user.dir")+"/seed.torrent";
                     Thread client = new Thread(new SimpleFileClient(IPforClietToServ,portClient,store));
                     client.run();
 
                     //then load it!
-                    ttorrentClient c = new ttorrentClient(intFaceAddr);
+                    ttorrentClient c = new ttorrentClient(intFaceAddr, packet.getAddress());
                     c.connect();
 
                 }

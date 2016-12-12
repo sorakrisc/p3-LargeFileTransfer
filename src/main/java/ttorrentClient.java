@@ -11,10 +11,12 @@ import java.util.concurrent.Executors;
 public class ttorrentClient implements Runnable{
     InetAddress InetAddr;
     String dirTorFileName;
+    InetAddress masterInetAddr;
 
-    public ttorrentClient(InetAddress ip){
+    public ttorrentClient(InetAddress ip, InetAddress mastInetAddr){
         InetAddr = ip;
         dirTorFileName = System.getProperty("user.dir")+"/seed.torrent";
+        masterInetAddr = mastInetAddr;
     }
 
     public static Client client;
@@ -50,14 +52,14 @@ public class ttorrentClient implements Runnable{
                 public void update(Observable observable, Object data) {
                     Client client = (Client) observable;
                     float progress = client.getTorrent().getCompletion();
-                    // Do something with progress.
+                    // send progress to the master with ip runDiscovery.ip
                     System.out.println(progress);
                 }
             });
 
             //progress
             ExecutorService pool = Executors.newFixedThreadPool(1);
-            pool.submit(new Thd());
+            pool.submit(new Thd(InetAddr, masterInetAddr));
             System.out.println("::::clientStatus:::: is not true");
             runDiscovery.clientStatus = true;
             // Or call client.share(...) with a seed time in seconds:
@@ -94,15 +96,28 @@ public class ttorrentClient implements Runnable{
     }
 
     static class Thd implements Runnable{
+        InetAddress InetAddr;
+        InetAddress masterInetAddr;
+        public Thd(InetAddress itfaddr, InetAddress mstInetAddr) {
+            InetAddr = itfaddr;
+            masterInetAddr = mstInetAddr;
+        }
         @Override
         public void run() {
-            while (true){
-                System.out.println("State: " + ttorrentClient.client.getState() + " Progress: " + ttorrentClient.client.getTorrent().getCompletion());
-                System.out.println(ttorrentClient.client.getPeers());
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            if (!masterInetAddr.equals(null)) {
+                while (true) {
+                    float progress = ttorrentClient.client.getTorrent().getCompletion();
+                    String state = ttorrentClient.client.getState().toString();
+                    System.out.println("State: " + state + " Progress: " + progress);
+                    //runDiscovery.prgtrkMap.put(InetAddr.toString(), Float.toString(progress));
+                    Thread ptc = new Thread(new ProgTrackClient(masterInetAddr, Float.toString(progress)));
+                    ptc.start();
+                    //System.out.println(ttorrentClient.client.getPeers());
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
