@@ -3,6 +3,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class runDiscovery {
+    static boolean trackerStatus = false;
+    static boolean clientStatus =false;
+    static boolean fileServerStatus = false;
+
     public static void main(String[] args) {
         if (args.length ==0) {
             InetAddress intfaceaddr = findInterface.askCorrectInetAddr();
@@ -24,12 +28,12 @@ public class runDiscovery {
 
             // create tracker and torrent file
 //            ttorrentTracker t = new ttorrentTracker(intfaceaddr, shareFileName);
-//            t.track();
+//            t.run();
             threadPool.submit(new ttorrentTracker(intfaceaddr, shareFileName));
 
             // be a seeder
 //            ttorrentClient c = new ttorrentClient(intfaceaddr);
-//            c.connect();
+//            c.run();
             threadPool.submit(new ttorrentClient(intfaceaddr));
 
             // tell other that u have the dang file and open the server
@@ -41,9 +45,24 @@ public class runDiscovery {
 //            serv.run();
 
             // UDPtrigger and tell them to come get the file
-            Thread trigger = new Thread(new UDPTrigger());
-            trigger.start();
-            System.out.println("STARTING TRIGGER");
+            boolean switches = true;
+            while(switches){
+                if (fileServerStatus){
+                    switches = false;
+                    System.out.println("****working on trigger****");
+                    Thread trigger = new Thread(new UDPTrigger());
+                    trigger.start();
+                    System.out.println("STARTING TRIGGER");
+                }
+                else{
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
 
 
         }

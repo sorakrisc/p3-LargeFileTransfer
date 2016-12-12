@@ -40,7 +40,8 @@ public class ttorrentTracker implements Runnable{
             // a TrackedTorrent object and pass it to the tracker.announce() method:
 //            tracker.announce(TrackedTorrent.load(new File(System.getProperty("user.dir")+"/seed.torrent")));
             tracker.announce(TrackedTorrent.load(new File(dirTorFileName)));
-
+            System.out.println("::::trackerStatus:::: is now true");
+            runDiscovery.trackerStatus = true;
             // Once done, you just have to start the tracker's main operation loop:
 //            tracker.start();
 
@@ -58,9 +59,7 @@ public class ttorrentTracker implements Runnable{
         List<URI> lst1 = new ArrayList<>();
         List<List<URI>> lst2 = new ArrayList<>();
         try{
-
             lst1.add(new URL("http:/" +InetAddr.toString()+ ":" + "6969" + "/announce").toURI());
-
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

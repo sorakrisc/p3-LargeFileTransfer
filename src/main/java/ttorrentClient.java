@@ -55,8 +55,11 @@ public class ttorrentClient implements Runnable{
                 }
             });
 
+            //progress
             ExecutorService pool = Executors.newFixedThreadPool(1);
             pool.submit(new Thd());
+            System.out.println("::::clientStatus:::: is not true");
+            runDiscovery.clientStatus = true;
             // Or call client.share(...) with a seed time in seconds:
             this.client.share();
             // Which would seed the torrent for an hour after the download is complete.
@@ -74,7 +77,20 @@ public class ttorrentClient implements Runnable{
 
     @Override
     public void run() {
-        connect();
+        boolean switches = true;
+        while (switches) {
+            if (runDiscovery.trackerStatus) {
+                switches =false;
+                System.out.println("****Working on client****");
+                connect();
+            } else {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     static class Thd implements Runnable{

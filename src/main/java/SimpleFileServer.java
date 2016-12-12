@@ -22,10 +22,26 @@ public class SimpleFileServer implements Runnable {
         OutputStream os = null;
         ServerSocket servsock = null;
         Socket sock = null;
+        boolean switches = true;
+        while (true){
+            if (runDiscovery.clientStatus){
+                System.out.println("Doing simple file server");
+                break;
+            }
+            else{
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         try {
+            System.out.println("****Working on server****");
             servsock = new ServerSocket(PORT);
+            System.out.println("::::fileServerStatus:::: is now true");
+            runDiscovery.fileServerStatus=true;
             while (true) {
-
                 try {
                     sock = servsock.accept();
                     System.out.println("Accepted connection : " + sock);
