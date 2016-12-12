@@ -57,10 +57,10 @@ public class ttorrentClient implements Runnable{
                 }
             });
 
+
             //progress
             ExecutorService pool = Executors.newFixedThreadPool(1);
             pool.submit(new Thd(InetAddr, masterInetAddr));
-            System.out.println("::::clientStatus:::: is not true");
             runDiscovery.clientStatus = true;
             // Or call client.share(...) with a seed time in seconds:
             this.client.share();
@@ -83,7 +83,6 @@ public class ttorrentClient implements Runnable{
         while (switches) {
             if (runDiscovery.trackerStatus) {
                 switches =false;
-                System.out.println("****Working on client****");
                 connect();
             } else {
                 try {

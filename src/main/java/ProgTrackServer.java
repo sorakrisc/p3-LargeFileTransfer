@@ -15,7 +15,6 @@ public class ProgTrackServer implements Runnable{
                         new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                 clientSentence = inFromClient.readLine();
-                System.out.println("Received: " + clientSentence);
                 String senderIp=connectionSocket.getRemoteSocketAddress().toString();
                 runDiscovery.prgtrkMap.put(portRemover(senderIp),clientSentence);
                 connectionSocket.close();

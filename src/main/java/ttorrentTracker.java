@@ -38,15 +38,10 @@ public class ttorrentTracker implements Runnable{
 
             // Then, for each torrent you wish to announce on this tracker, simply created
             // a TrackedTorrent object and pass it to the tracker.announce() method:
-//            tracker.announce(TrackedTorrent.load(new File(System.getProperty("user.dir")+"/seed.torrent")));
             tracker.announce(TrackedTorrent.load(new File(dirTorFileName)));
-            System.out.println("::::trackerStatus:::: is now true");
             runDiscovery.trackerStatus = true;
-            // Once done, you just have to start the tracker's main operation loop:
-//            tracker.start();
+            // Once done, you just have to start the tracker's main operation loop:// tracker.start();// You can stop the tracker when you're done with:// tracker.stop();
 
-            // You can stop the tracker when you're done with:
-            //tracker.stop();
         }catch (IOException ex) {
 //            Logger.getLogger(DiscoveryThread.class.getName()).log(Level.SEVERE, null, ex);
         }catch (NoSuchAlgorithmException e) {
@@ -71,18 +66,13 @@ public class ttorrentTracker implements Runnable{
 
 
     public void createTorrentFile(List<List<URI>> URI) {
-        // File parent = new File("d:/echo-insurance.backup");
-
         try {
-            System.out.println( "create new .torrent metainfo file..." );
             Torrent torrent = Torrent.create(new File(dirShareFileName), 512*1024, URI, "createdByJamesTle");
 
-            System.out.println("save .torrent to file...");
             FileOutputStream fos = new FileOutputStream(dirTorFileName);
             torrent.save(fos);
             fos.close();
-            System.out.println(".torrent file is saved");
-
+            System.out.println( ".torrent file created" );
         } catch ( Exception e ) {
             e.printStackTrace();
         }

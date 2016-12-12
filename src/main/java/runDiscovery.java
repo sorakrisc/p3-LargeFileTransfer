@@ -35,6 +35,7 @@ public class runDiscovery {
     public static void main(String[] args) {
         if (args.length ==0) {
             InetAddress intfaceaddr = findInterface.askCorrectInetAddr();
+            System.out.println("Discovering...");
             Thread talker = new Thread(new UDPTalker());
             Thread discoveryThread = new Thread(new DiscoveryThread(intfaceaddr));
             talker.start();
@@ -49,7 +50,6 @@ public class runDiscovery {
 
             // ask ip
             InetAddress intfaceaddr = findInterface.askCorrectInetAddr();
-
             // create tracker and torrent file
             threadPool.submit(new ttorrentTracker(intfaceaddr, shareFileName));
 
@@ -65,15 +65,11 @@ public class runDiscovery {
             // UDPtrigger and tell them to come get the file
             // but wait till the file hosting server is up
             fileServerstatusChecker();
-            System.out.println("****working on trigger****");
             Thread trigger = new Thread(new UDPTrigger());
             trigger.start();
 
-            //start progress tracking server
-            System.out.println("****starting PTS****");
+            //start progress tracking server and show progress
             threadPool.submit((new ProgTrackServer()));
-
-            System.out.println("****starting PTS printer****");
             threadPool.submit((new ProgTrackPrint()));
 
 
@@ -81,5 +77,3 @@ public class runDiscovery {
         }
     }
 }
-// TODO: Delete the torrent file when it is done
-// TODO: Check for excessive prints and useless comments

@@ -21,13 +21,10 @@ public class DiscoveryThread implements Runnable {
             socket = new DatagramSocket(6789, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
             while (true) {
-                ///System.out.println(getClass().getName() + ": Ready to receive broadcast packets!");
-
                 //Receive a packet
                 byte[] recvBuf = new byte[15000];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
                 socket.receive(packet);
-                
 
                 //Packet received
                 /// System.out.println(getClass().getName() + ": Discovery packet received from: " + packet.getAddress().getHostAddress());
@@ -52,7 +49,7 @@ public class DiscoveryThread implements Runnable {
                     ///System.out.println(getClass().getName() + ": Sent packet to: " + sendPacket.getAddress().getHostAddress());
                 }
                 else if (message.equals("DISCOVER_SERVER_TRIGGER") && switches){
-                    System.out.println("RRRRRRRECEIVE THE TRIGGER");
+                    System.out.println("Receiving a file");
                     switches =false;
                     byte[] sendData = "DISCOVER_SERVER_RESPONSE_TRIGGER".getBytes();
                     //Send a response
@@ -72,7 +69,7 @@ public class DiscoveryThread implements Runnable {
 
                 }
                 else{
-                    System.out.println("YOOOOOOOOO");
+                    System.out.println("Something is Wrong...");
                     System.out.println(message);
                 }
             }
