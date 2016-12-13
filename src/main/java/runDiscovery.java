@@ -69,7 +69,7 @@ public class runDiscovery {
             trigger.start();
 
             //start progress tracking server and show progress
-            threadPool.submit((new ProgTrackServer()));
+            threadPool.submit((new ProgTrackMultiThrdServ(6789)));
             threadPool.submit((new ProgTrackPrint()));
 
 

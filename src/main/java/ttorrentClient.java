@@ -108,7 +108,6 @@ public class ttorrentClient implements Runnable{
                     float progress = ttorrentClient.client.getTorrent().getCompletion();
                     String state = ttorrentClient.client.getState().toString();
                     System.out.println("State: " + state + " Progress: " + progress);
-                    //runDiscovery.prgtrkMap.put(InetAddr.toString(), Float.toString(progress));
                     Thread ptc = new Thread(new ProgTrackClient(masterInetAddr, Float.toString(progress)));
                     ptc.start();
                     //System.out.println(ttorrentClient.client.getPeers());

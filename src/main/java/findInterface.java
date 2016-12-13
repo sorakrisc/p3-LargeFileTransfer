@@ -37,6 +37,7 @@ public class findInterface {
         boolean validData = false;
         for (InetAddress ind : intfaceLst){
             System.out.println(i+") "+ind);
+            i=i+1;
         }
         do {
             System.out.println("Enter a number corresponding to the Interface");
